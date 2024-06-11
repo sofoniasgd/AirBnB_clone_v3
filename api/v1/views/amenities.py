@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-"""states.py"""
+"""amenities.py"""
 
 from api.v1.views import app_views
 from flask import abort, jsonify, make_response, request
@@ -33,9 +33,9 @@ def delete_amenity(amenity_id):
     amenity = storage.get("Amenity", amenity_id)
     if amenity is None:
         abort(404)
-    amenity.delete()
+    storage.delete()
     storage.save()
-    return (jsonify({}))
+    return make_response(jsonify({}), 200)
 
 
 @app_views.route('/amenities', methods=['POST'], strict_slashes=False)
@@ -62,5 +62,5 @@ def put_amenity(amenity_id):
     for attr, val in request.get_json().items():
         if attr not in ['id', 'created_at', 'updated_at']:
             setattr(amenity, attr, val)
-    amenity.save()
-    return jsonify(amenity.to_dict())
+    storage.save()
+    return make_request(jsonify(amenity.to_dict()), 200)
